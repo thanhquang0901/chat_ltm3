@@ -4,6 +4,7 @@
  */
 package component;
 
+import app.MessageType;
 import event.PublicEvent;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -34,10 +35,12 @@ public class ChatBottom extends javax.swing.JPanel {
 
     public Model_User_Account getUser() {
         return user;
+        
     }
 
     public void setUser(Model_User_Account user) {
         this.user = user;
+        panelMore.setUser(user);
     }
 
     
@@ -58,8 +61,12 @@ public class ChatBottom extends javax.swing.JPanel {
         JIMSendTextPane txt = new JIMSendTextPane();
         txt.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyTyped(KeyEvent e) {
+            public void keyTyped(KeyEvent ke) {
                 refresh();
+                if(ke.getKeyChar()==10&&ke.isControlDown()){
+                    
+                  eventSend(txt);  
+                }
             }
         });
         txt.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -83,16 +90,7 @@ public class ChatBottom extends javax.swing.JPanel {
         cmd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String text = txt.getText().trim();
-                if(!text.equals("")) {
-                    Model_Send_Message message = new Model_Send_Message(Service.getInstance().getUser().getId(),user.getId(), text);
-                    PublicEvent.getInstance().getEventChat().sendMessage(message);
-                    txt.setText("");
-                    txt.grabFocus();
-                    refresh();
-                } else {
-                    txt.grabFocus();
-                }
+              eventSend(txt);
             }
             
         });
@@ -124,7 +122,18 @@ public class ChatBottom extends javax.swing.JPanel {
         panelMore = new Panel_More();
         add(panelMore, "dock south,h 0!");
     }
-    
+    private void eventSend(JIMSendTextPane txt){
+        String text = txt.getText().trim();
+                if(!text.equals("")) {
+                    Model_Send_Message message = new Model_Send_Message(MessageType.TEXT, Service.getInstance().getUser().getId(),user.getId(), text);
+                    PublicEvent.getInstance().getEventChat().sendMessage(message);
+                    txt.setText("");
+                    txt.grabFocus();
+                    refresh();
+                } else {
+                    txt.grabFocus();
+                }
+    }
     private void send(Model_Send_Message data){
         Service.getInstance().getClient().emit("send_to_user", data.toJsonObject());
     }

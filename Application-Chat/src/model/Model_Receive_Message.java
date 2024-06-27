@@ -4,6 +4,7 @@
  */
 package model;
 
+import app.MessageType;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,6 +13,20 @@ import org.json.JSONObject;
  * @author ADMIN
  */
 public class Model_Receive_Message {
+
+    /**
+     * @return the messageType
+     */
+    public MessageType getMessageType() {
+        return messageType;
+    }
+
+    /**
+     * @param messageType the messageType to set
+     */
+    public void setMessageType(MessageType messageType) {
+        this.messageType = messageType;
+    }
 
     /**
      * @return the fromId
@@ -41,7 +56,8 @@ public class Model_Receive_Message {
         this.text = text;
     }
 
-    public Model_Receive_Message(int fromId, String text) {
+    public Model_Receive_Message(MessageType messageType, int fromId, String text) {
+        this.messageType = messageType;
         this.fromId = fromId;
         this.text = text;
     }
@@ -49,19 +65,22 @@ public class Model_Receive_Message {
     public Model_Receive_Message(Object json) {
         JSONObject obj = (JSONObject) json;
         try {
+            messageType=MessageType.toMessageType(obj.getInt("messageType"));
             fromId = obj.getInt("fromId");
             text = obj.getString("text");
         } catch (JSONException e) {
             System.err.println(e);
         }
     }
-    
+    private MessageType messageType;
     private int fromId;
     private String text;
     
     public JSONObject toJsonObject() {
         try {
+            
             JSONObject json = new JSONObject();
+            json.put("messageType", messageType.getValue());
             json.put("fromId", getFromId());
             json.put("text", getText());
             return json;

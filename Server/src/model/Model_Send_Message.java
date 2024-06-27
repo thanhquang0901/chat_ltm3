@@ -7,6 +7,20 @@ package model;
 public class Model_Send_Message {
 
     /**
+     * @return the messageType
+     */
+    public int getMessageType() {
+        return messageType;
+    }
+
+    /**
+     * @param messageType the messageType to set
+     */
+    public void setMessageType(int messageType) {
+        this.messageType = messageType;
+    }
+
+    /**
      * @return the fromId
      */
     public int getFromId() {
@@ -48,7 +62,8 @@ public class Model_Send_Message {
         this.text = text;
     }
 
-    public Model_Send_Message(int fromId, int toId, String text) {
+    public Model_Send_Message(int messageType, int fromId, int toId, String text) {
+        this.messageType = messageType;
         this.fromId = fromId;
         this.toId = toId;
         this.text = text;
@@ -56,17 +71,11 @@ public class Model_Send_Message {
 
     public Model_Send_Message() {
     }
-    
+
+    private int messageType;
     private int fromId;
     private int toId;
     private String text;
 
-    public int getFromUserID() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public int getFromID() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
  
 }

@@ -4,6 +4,8 @@
  */
 package component;
 
+import app.MessageType;
+import emoji.Emogi;
 import java.awt.Adjustable;
 import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
@@ -38,12 +40,21 @@ public class ChatBody extends javax.swing.JPanel {
     }
 
     public void addItemLeft(Model_Receive_Message data) {
+        if(data.getMessageType()==MessageType.TEXT){
         ChatLeft item = new ChatLeft();
         item.setText(data.getText());
         item.setTime();
         body.add(item, "wrap, w 100::80%");
+        }else if(data.getMessageType()==MessageType.EMOJI){
+           if(data.getMessageType()==MessageType.TEXT){
+        ChatLeft item = new ChatLeft();
+        item.setEmoji(Emogi.getInstance().getImoji(Integer.valueOf(data.getText())).getIcon());
+        item.setTime();
+        body.add(item, "wrap, w 100::80%"); 
+        }
         repaint();
         revalidate();
+       }
     }
 
     public void addItemLeft(String text, String user, String[] image) {
@@ -58,12 +69,19 @@ public class ChatBody extends javax.swing.JPanel {
     }
 
     public void addItemRight(Model_Send_Message data) {
-        ChatRight item = new ChatRight();
+        if(data.getMessageType()==MessageType.TEXT){
+         ChatRight item = new ChatRight();
         item.setText(data.getText());
         body.add(item, "wrap, al right, w 100::80%");
-        repaint();
-        revalidate();
         item.setTime();
+        }else if(data.getMessageType()==MessageType.EMOJI){
+            ChatRight item = new ChatRight();
+        item.setEmoji(Emogi.getInstance().getImoji(Integer.valueOf(data.getText())).getIcon());
+        body.add(item, "wrap, al right, w 100::80%");
+        item.setTime();
+        }
+          repaint();
+        revalidate();
         scrollToBottom();
     }
 
